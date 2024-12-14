@@ -1,0 +1,102 @@
+.new-product{
+    background-color: #fff;
+    z-index: 10;
+    padding: 60px 40px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 1px 1px 1px  #ccc;
+    border-left: 1px solid $primary;
+    transition: all .4s;
+    &_head{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .title{
+        font-size: 20px;
+    }
+
+    .close{
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        position: relative;
+        &::before{
+            content: "";
+            width: 20px;
+            height: 1px;
+            position: absolute;
+            top: 8px;
+            background: #000;
+            transform: rotate(45deg);
+        }
+        &::after{
+            content: "";
+            width: 20px;
+            height: 1px;
+            position: absolute;
+            top: 8px;
+            background: #000;
+            transform: rotate(-45deg);
+        }
+    }
+    
+    .form{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 40px;
+    }
+
+    
+    label{
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        position: relative;
+        cursor: pointer;
+        &.checkbox{
+            padding-left: 30px;
+            margin-top: 16px;
+            &::before{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 16px;
+                height: 16px;
+                border-radius: 4px;
+                border: 1px solid $btn-primary;
+            }
+        }
+    }
+
+    input{
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 8px;
+        outline: none;
+        border: 1px solid #dbdbdb;
+    }
+
+    input[type='checkbox']{
+        display: none;
+    }
+
+    input:checked ~ label{
+        &::before{
+            background: $btn-primary;
+        }
+    }
+
+    .accent-btn{
+        width: 100%;
+        margin-top: 30px;
+    }
+
+}
