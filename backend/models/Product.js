@@ -10,7 +10,7 @@ const Product = new Schema({
     category: { type: String},
     img: { type: String, require: true, default: 'default.img' },
     isPopular: { type: Boolean, default: false },
-    isNew: { type: Boolean, default: false },
+    isNewProduct: { type: Boolean, default: false },
     date_create: { type: Date, default: Date.now },
 })
 
