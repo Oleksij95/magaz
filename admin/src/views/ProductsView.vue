@@ -16,11 +16,9 @@
                 <div v-for="(product, idx) in products" :key="product._id" class="panel-item grid-5">
                     <div>{{ idx + 1 }}</div>
                     <div>{{ product.name }}</div>
+                    <div>{{ product.category.name }}</div>
                     <div>{{ product.price }}</div>
-                    <div>{{ product.price }}</div>
-                    <div>
-                        <div @click="deleteProduct(product._id)" class="deleteProduct" title="delete"></div>
-                    </div>
+                    <div @click="deleteProduct(product._id)" class="deleteProduct" title="delete"></div>
                 </div>
             </div>
         </div>
@@ -33,36 +31,44 @@
         </div>
         <form @submit.prevent="createNewProduct">
             <div class="form">
-                <div class="filed">
+                <div class="field">
                     <label for="seoTitle">Seo title</label>
                     <input type="text" name="seoTitle" id="seoTitle" v-model="product.seoTitle">
                 </div>
-                <div class="filed">
+                <div class="field">
                     <label for="seoDescription">Seo description</label>
                     <input type="text" name="seoDescription" id="seoDescription" v-model="product.seoDescription">
                 </div>
-                <div class="filed">
+                <div class="field">
                     <label for="name">Name</label>
                     <input type="text" name="name" id="name" v-model="product.name">
                 </div>
-                <div class="filed">
+                <div class="field">
                     <label for="slug">Slug</label>
                     <input type="text" name="slug" id="slug" v-model="product.slug">
                 </div>
-                <div class="filed">
+                <div class="field">
                     <label for="price">Price</label>
                     <input type="number " name="price" id="price" v-model="product.price">
                 </div>
-                <div class="filed">
+
+                <div class="field">
+                    <label for="category">Category</label>
+                    <select name="category" id="category" v-model="product.category">
+                        <option :value="category._id" v-for="category in categories" :key="category._id">{{category.name}}</option>
+                    </select>
+                </div>
+
+                <div class="field">
                     <label for="description">Description</label>
                     <input type="text" name="description" id="description" v-model="product.description">
                 </div>
                 <div>
-                    <div class="filed">
+                    <div class="field">
                         <input type="checkbox" name="isPopular" id="isPopular" v-model="product.isPopular">
                         <label for="isPopular" class="checkbox">is Popular</label>
                     </div>
-                    <div class="filed">
+                    <div class="field">
                         <input type="checkbox" name="isNewProduct" id="isNewProduct" v-model="product.isNewProduct">
                         <label for="isNewProduct" class="checkbox">is New Product</label>
                     </div>
@@ -90,6 +96,7 @@ interface NewProduct {
     slug: string
     price: number
     description?: string
+    category?: string
     isPopular?:boolean
     isNewProduct?:boolean
 }
@@ -100,6 +107,7 @@ export default defineComponent({
         return {
             products: [],
             isShowNewProductPannel: false,
+            categories: [],
             product: {
                 seoTitle: '',
                 seoDescription: '',
@@ -107,6 +115,7 @@ export default defineComponent({
                 slug: '',
                 price: 0,
                 description: '',
+                category: "",
                 isPopular: false,
                 isNewProduct: false,
             } as NewProduct
@@ -114,6 +123,7 @@ export default defineComponent({
     },
     async beforeMount() {
        this.fetchProducts()
+       this.fetchCategories()
     },
     methods: {
         async fetchProducts() {
@@ -145,6 +155,7 @@ export default defineComponent({
                 description: this.product.description,
                 isPopular: this.product.isPopular,
                 isNewProduct: this.product.isNewProduct,
+                category: this.product.category,
             }
             try {
                 await this.$axios.post('/products', data).then(() => {
@@ -163,7 +174,15 @@ export default defineComponent({
                 console.log(e)
             }
         
-        }
+        },
+        async fetchCategories() {
+            try {
+                const categories = await this.$axios.get('/categories')
+                this.categories = categories.data
+            } catch( e ) {
+                console.log(e)
+            }
+        },
     }
 })
 </script>

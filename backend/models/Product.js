@@ -7,7 +7,7 @@ const Product = new Schema({
     slug: { type: String, require: true, min: 3, unique: true },
     price: { type: Number, require: true },
     description: { type: String },
-    category: { type: String},
+    category: { type: Schema.Types.ObjectId, ref: 'Category' },
     img: { type: String, require: true, default: 'default.img' },
     isPopular: { type: Boolean, default: false },
     isNewProduct: { type: Boolean, default: false },

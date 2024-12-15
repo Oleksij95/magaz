@@ -1,4 +1,4 @@
-.new-product{
+.new-product, .new-cat{
     background-color: #fff;
     z-index: 10;
     padding: 60px 40px;
@@ -53,6 +53,9 @@
         margin-top: 40px;
     }
 
+    .field{
+        position: relative;
+    }
     
     label{
         display: block;
@@ -76,12 +79,15 @@
         }
     }
 
-    input{
+    input,select{
         width: 100%;
         padding: 12px 16px;
         border-radius: 8px;
         outline: none;
         border: 1px solid #dbdbdb;
+        &.errorField{
+            border: 1px solid red;
+        }
     }
 
     input[type='checkbox']{
@@ -99,4 +105,17 @@
         margin-top: 30px;
     }
 
+    .error{
+        color: red;
+        font-size: 12px;
+        position: absolute;
+        bottom: -18px;
+    }
+
+}
+
+.new-cat{
+    .form{
+        grid-template-columns: 1fr;
+    }
 }
