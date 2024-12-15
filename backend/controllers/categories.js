@@ -25,7 +25,6 @@ class Categories {
         try {
             const { name } = req.body
             const alredyExist = await Category.findOne({'name': name})
-            console.log(alredyExist)
             if (alredyExist) {
                 return res.status(404).json({error: 'this category alredy exist'})
             }

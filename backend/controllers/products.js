@@ -2,6 +2,32 @@ const Product = require("../models/Product")
 const Category = require("../models/Category")
 
 class Products {
+    async getProduct(req, res) {
+      try {
+        const product = await Product.findById(req.params.id)
+        return res.json(product)
+      } catch( e ) {
+        return res.status(404).json('product not found')
+      }
+    }
+
+    async updateProduct(req, res) {
+      try{ 
+        const product = await Product.findById(req.body.id)
+
+        if ( !product ) {
+          return res.status(404).json('product not found')
+        }
+
+        const { category, description, name, price, slug } = req.body
+        
+        await Product.updateOne(product, { category, description, name, price, slug } )
+
+        return res.json(product)
+      } catch( e ) {
+        return res.status(404).json('product not found')
+      }
+    }
     async getProducts(req, res) {
       try {
         const products = await Product.find().sort({date_create:'desc'})

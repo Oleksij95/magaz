@@ -45,6 +45,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import type {AxiosInstance} from 'axios'
+import fetchCategories from "@/mixin/fetchCategories"
+
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -54,6 +56,7 @@ declare module '@vue/runtime-core' {
 
 export default defineComponent({
     name: "ProductsView",
+    mixins: [fetchCategories],
     data() {
         return {
             isShowNewCatPannel: false,
@@ -68,15 +71,6 @@ export default defineComponent({
        this.fetchCategories()
     },
     methods: {
-        async fetchCategories() {
-            try {
-                const categories = await this.$axios.get('/categories')
-                this.categories = categories.data
-            } catch( e ) {
-                console.log(e)
-            }
-        },
-
         async createNewCat() {
             try {
                 const data = {
@@ -88,7 +82,8 @@ export default defineComponent({
                     this.cat.name = ''
                     this.error = null
                 })
-            } catch( e ) {
+            // eslint-disable-next-line 
+            } catch( e:any ) {
                 this.error = e.response.data.error
             }
         }

@@ -13,13 +13,13 @@
                 <div>Actions</div>
             </div>
             <div class="panel-body ">
-                <div v-for="(product, idx) in products" :key="product._id" class="panel-item grid-5">
+                <router-link :to="`products/${product._id}`" v-for="(product, idx) in products" :key="product._id" class="panel-item grid-5">
                     <div>{{ idx + 1 }}</div>
                     <div>{{ product.name }}</div>
                     <div>{{ product.category.name }}</div>
                     <div>{{ product.price }}</div>
-                    <div @click="deleteProduct(product._id)" class="deleteProduct" title="delete"></div>
-                </div>
+                    <div @click.prevent.stop="deleteProduct(product._id)" class="deleteProduct" title="delete"></div>
+                </router-link>
             </div>
         </div>
     </div>
@@ -82,6 +82,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import type {AxiosInstance} from 'axios'
+import fetchCategories from "@/mixin/fetchCategories"
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -103,6 +104,7 @@ interface NewProduct {
 
 export default defineComponent({
     name: "ProductsView",
+    mixins: [fetchCategories],
     data() {
         return {
             products: [],
@@ -175,14 +177,7 @@ export default defineComponent({
             }
         
         },
-        async fetchCategories() {
-            try {
-                const categories = await this.$axios.get('/categories')
-                this.categories = categories.data
-            } catch( e ) {
-                console.log(e)
-            }
-        },
+     
     }
 })
 </script>
