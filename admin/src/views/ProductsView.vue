@@ -17,7 +17,8 @@
                 <router-link :to="`products/${product._id}`" v-for="(product, idx) in products" :key="product._id" class="panel-item grid-6">
                     <div>{{ idx + 1 }}</div>
                     <div>
-                        <img :src="product.img" width="60" />
+                        <img :src="product.img" width="60" v-if="product.img" />
+                        <img src="../assets/default.jpg" width="60" v-else />
                     </div>
                     <div>{{ product.name }}</div>
                     <div>{{ product.category.name }}</div>
@@ -134,18 +135,10 @@ export default defineComponent({
     methods: {
         async fetchProducts() {
             try {
-                /* eslint-disable */
-                // @ts-ignore
-                const token = this.$cookies.get('token')
-                const products = await this.$axios.get('/products', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
+                const products = await this.$axios.get('/products')
                 this.products = products.data
             } catch( e ) {
-                 // @ts-ignore
-                this.$router.push("/")
+                console.log(e)           
             }
         },
         async deleteProduct(id: string) {

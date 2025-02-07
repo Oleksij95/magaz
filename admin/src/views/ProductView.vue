@@ -7,6 +7,7 @@
                     <div class="product-image">
                         <input type="file" name="image" id="image"  accept="image/*" ref="logo" @change="onFileChange">
                         <img v-if="logo || product.img" :src="logo || product.img" />
+                        <img v-else src="../assets/default.jpg"  />
                         <div v-if="logo || product.img" @click="deleteFile" class="delete"></div>
                     </div>
                 </div>
@@ -97,20 +98,14 @@ export default defineComponent({
         }
     },
     async beforeCreate() {
-        const token = this.$cookies.get('token')
         const id = this.$route.params.id
-        const product =  await this.$axios.get(`/products/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        const product =  await this.$axios.get(`/products/${id}`)
         const categories = this.fetchCategories()
         this.product = product.data
         this.categories = categories.data
     },
     methods: {
         async updateProduct() {
-            const token = this.$cookies.get('token')
             const data = {
                 id: this.product?._id,
                 name: this.product?.name,
@@ -121,11 +116,7 @@ export default defineComponent({
                 isPopular: this.product?.isPopular,
                 isNewProduct: this.product?.isNewProduct,
             }
-            await this.$axios.put('/products', data, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            await this.$axios.put('/products', data)
         },
 
         // eslint-disable-next-line 
@@ -147,8 +138,7 @@ export default defineComponent({
                 const data = {
                     productId: this.product?._id
                 }
-                const response = await this.$axios.post('/products/upload/delete', data)
-                const product = response.data.product
+                await this.$axios.post('/products/upload/delete', data)
                 this.logo = ''
                 this.$refs.logo.value=""
             } catch (e) {

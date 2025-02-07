@@ -37,8 +37,6 @@ export default createStore({
         async login({commit}, data) {
             const response = await axios.post('http://localhost:5050/auth/login', data).then((res: authLoginData) => {
                 commit('setUser', res.data.userDto)
-                console.log("4040404")
-                console.log(res.data.token)
                 // @ts-ignore
                 $cookies.set('token', res.data.token, '1h')
                 return {status: 'Ok'}
