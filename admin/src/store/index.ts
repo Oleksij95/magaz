@@ -3,8 +3,6 @@ import axios from 'axios';
 
 import { createStore  } from 'vuex'
 
-const baseUrl = process.env.BASE_URL || 'http://localhost:5050';
-
 type authLoginData = {
     data: {
         userDto: {
@@ -31,6 +29,10 @@ export default createStore({
         setUser(state, user) {
             state.user = user
             state.isAuthenticated = true
+        },
+        setLogout(state) {
+            state.user = null
+            state.isAuthenticated = false
         }
     },
     actions: {
@@ -57,11 +59,14 @@ export default createStore({
                     }
                 });
                 commit('setUser', user.data.user)
-                return token
+                return user.data.user
             } catch( e ) {
                 // console.log(e)
             }
         },
+        logout({commit}) {
+            commit("setLogout")
+        }
 
     },
     modules: {

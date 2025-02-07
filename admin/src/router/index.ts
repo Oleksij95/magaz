@@ -47,11 +47,21 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next)=>{
+  store.dispatch('checkAuth').then((res) => {
+    const currentUser = res || null
+    const requireAuth = to.matched.some(record => record.meta.requiresAuth);
+    if(requireAuth && !currentUser){
+      next({name:'home'})
+    }
+    
+    if (currentUser && to.path === '/') {
+      next({name:'products'})
+    }
 
-
-
-
-
+    next();
+  });
+});
 
 
 export default router
