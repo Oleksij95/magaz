@@ -23,15 +23,6 @@ class Auth {
             const userDto = new UserDto(user)
             const token = tokenService.generateToken({...userDto})
             await tokenService.saveToken(userDto.id, token)
-
-            res.setHeader(
-			    'Set-Cookie',
-				cookie.serialize('token', String(token), {
-					httpOnly: true,
-					maxAge: 60 * 60 * 24 * 1,
-					
-				})
-			);
           
             return res.status(200).json({userDto, token})
         } catch( e ) {

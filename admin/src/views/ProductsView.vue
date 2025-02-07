@@ -96,15 +96,22 @@ declare module '@vue/runtime-core' {
 }
 
 interface NewProduct {
+    _id: string
     seoTitle?: string
     seoDescription?: string
     name: string
     slug: string
     price: number
     description?: string
-    category?: string
-    isPopular?:boolean
-    isNewProduct?:boolean
+    category: Category
+    isPopular?: boolean
+    isNewProduct?: boolean
+    img?: string
+}
+
+interface Category {
+    _id: string
+    name: string
 }
 
 export default defineComponent({
@@ -112,9 +119,9 @@ export default defineComponent({
     mixins: [fetchCategories],
     data() {
         return {
-            products: [],
+            products: [] as NewProduct[],
             isShowNewProductPannel: false,
-            categories: [],
+            categories: [] as Category[],
             product: {
                 seoTitle: '',
                 seoDescription: '',
@@ -122,7 +129,7 @@ export default defineComponent({
                 slug: '',
                 price: 0,
                 description: '',
-                category: "",
+                category: {},
                 isPopular: false,
                 isNewProduct: false,
             } as NewProduct

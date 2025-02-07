@@ -64,12 +64,12 @@
 import { defineComponent } from 'vue';
 import type {AxiosInstance} from 'axios'
 import fetchCategories from "@/mixin/fetchCategories"
+import { RouteLocation } from 'vue-router'
 
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
         $axios: AxiosInstance
-        // eslint-disable-next-line 
-        $route: any
+        $route: RouteLocation
         $refs: HTMLFormElement
     }
 }
@@ -87,13 +87,18 @@ interface Product {
     img?: string
 }
 
+interface Category {
+    _id: string
+    name: string
+}
+
 export default defineComponent({
     name: 'ProductWciew',
     mixins: [fetchCategories],
     data() {
         return {
-            product: null as Product | null,
-            categories: [],
+            product: {} as Product,
+            categories: [] as Category[],
             logo: '',
         }
     },
@@ -119,14 +124,14 @@ export default defineComponent({
             await this.$axios.put('/products', data)
         },
 
-        // eslint-disable-next-line 
-        async onFileChange(e: any) {
-            const file = e.target.files[0]
+        async onFileChange(e: Event) {
+            const target= e.target as HTMLInputElement;
+            const file: File = (target.files as FileList)[0];
+
             if (file && file.size < 5 * 1024 * 1024) {
                 const formData = new FormData();
-                /* eslint-disable */ 
-                // @ts-ignore
-                formData.append('productId', this.product?._id);
+                const id = this.product._id || ""
+                formData.append('productId', id);
                 formData.append('image', file);
                 const response = await this.$axios.post('/products/upload', formData)
                 this.logo = response.data.imageUrl

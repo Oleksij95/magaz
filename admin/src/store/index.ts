@@ -14,7 +14,6 @@ type authLoginData = {
     }   
 }
 
-
 export default createStore({
     state: {
         user: null,
@@ -52,7 +51,6 @@ export default createStore({
             try {
                 // @ts-ignore
                 const token = $cookies.get('token')
-                // @ts-ignore
                 const user = await axios.get('http://localhost:5050/auth/checkAuth', {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -60,8 +58,9 @@ export default createStore({
                 });
                 commit('setUser', user.data.user)
                 return user.data.user
-            } catch( e ) {
-                // console.log(e)
+            // eslint-disable-next-line
+            } catch( e: any ) {
+                console.log(e)
             }
         },
         logout({commit}) {

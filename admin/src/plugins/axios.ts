@@ -4,7 +4,6 @@ import type {App} from 'vue'
 interface AxiosOptions {
     baseUrl?: string
     token?: string
-    headers?: any
 }
 
 function getCookie(cname: string) {
@@ -28,9 +27,6 @@ export default {
    
         app.config.globalProperties.$axios = axios.create({
             baseURL: options.baseUrl,
-            headers: {
-                Authorization: `Bearer ${options.token}` ,
-            }
         })
 
         app.config.globalProperties.$axios.interceptors.request.use(

@@ -53,13 +53,19 @@ declare module '@vue/runtime-core' {
   }
 }
 
+interface Category {
+    _id: string,
+    name: string,
+    products: []
+}
+
 export default defineComponent({
     name: "ProductsView",
     mixins: [fetchCategories],
     data() {
         return {
             isShowNewCatPannel: false,
-            categories: [],
+            categories: [] as Category[],
             cat: {
                 name: ""
             },
@@ -72,7 +78,6 @@ export default defineComponent({
     methods: {
         async createNewCat() {
             try {
-                const token = this.$cookies.get('token')
                 const data = {
                     name: this.cat.name
                 }
@@ -82,8 +87,8 @@ export default defineComponent({
                     this.cat.name = ''
                     this.error = null
                 })
-            // eslint-disable-next-line 
-            } catch( e:any ) {
+            // eslint-disable-next-line
+            } catch( e: any  ) {
                 this.error = e.response.data.error
             }
         }
