@@ -47,7 +47,6 @@ import { defineComponent } from 'vue';
 import type {AxiosInstance} from 'axios'
 import fetchCategories from "@/mixin/fetchCategories"
 
-
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance
@@ -73,6 +72,7 @@ export default defineComponent({
     methods: {
         async createNewCat() {
             try {
+                const token = this.$cookies.get('token')
                 const data = {
                     name: this.cat.name
                 }

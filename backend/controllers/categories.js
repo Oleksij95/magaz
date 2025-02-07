@@ -24,6 +24,7 @@ class Categories {
     async addCategory(req, res) {
         try {
             const { name } = req.body
+            console.log(name)
             const alredyExist = await Category.findOne({'name': name})
             if (alredyExist) {
                 return res.status(404).json({error: 'this category alredy exist'})

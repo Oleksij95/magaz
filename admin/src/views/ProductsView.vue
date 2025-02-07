@@ -5,16 +5,20 @@
             <button class="accent-btn" @click="isShowNewProductPannel = true">Add Product</button>
         </div>
         <div class="panel-body-wrapper">
-            <div class="panel-nav grid-5">
+            <div class="panel-nav grid-6">
                 <div>#</div>
+                <div>Image</div>
                 <div>Product</div>
                 <div>Category</div>
                 <div>Price</div>
                 <div>Actions</div>
             </div>
             <div class="panel-body ">
-                <router-link :to="`products/${product._id}`" v-for="(product, idx) in products" :key="product._id" class="panel-item grid-5">
+                <router-link :to="`products/${product._id}`" v-for="(product, idx) in products" :key="product._id" class="panel-item grid-6">
                     <div>{{ idx + 1 }}</div>
+                    <div>
+                        <img :src="product.img" width="60" />
+                    </div>
                     <div>{{ product.name }}</div>
                     <div>{{ product.category.name }}</div>
                     <div>{{ product.price }}</div>
@@ -130,10 +134,18 @@ export default defineComponent({
     methods: {
         async fetchProducts() {
             try {
-                const products = await this.$axios.get('/products')
+                /* eslint-disable */
+                // @ts-ignore
+                const token = this.$cookies.get('token')
+                const products = await this.$axios.get('/products', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                 this.products = products.data
             } catch( e ) {
-                console.log(e)
+                 // @ts-ignore
+                this.$router.push("/")
             }
         },
         async deleteProduct(id: string) {

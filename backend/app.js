@@ -5,6 +5,8 @@ const cors = require('cors');
 const router = require('./routs');
 const app = express();
 
+app.use(express.static('public'));
+
 const PORT = process.env.PORT || 5050;
 
 app.use(
@@ -25,7 +27,7 @@ const start = async () => {
 		});
 		app.listen(PORT, () => console.log(`Server was started in ${PORT} port`));
 	} catch (e) {
-		console.log(e);
+		return console.log(e);
 	}
 };
 

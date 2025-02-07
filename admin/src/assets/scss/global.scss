@@ -27,6 +27,11 @@ body{
     grid-template-columns: repeat(5, 1fr);
 }
 
+.grid-6{
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+}
+
 .panel{
     background: #fff;
     border-radius: 4px;
@@ -53,11 +58,12 @@ body{
         margin-top: 10px;
     }
     &-item{
-        padding: 20px;
+        padding: 10px 20px;
         transition: all .3s;
         border-bottom: 1px solid #e2e8f0;
         text-decoration: none;
         color: #000;
+        align-items: center;
         &:hover{
             background: #edf2f7 ;
         }

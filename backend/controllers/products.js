@@ -1,11 +1,46 @@
 const Product = require("../models/Product")
 const Category = require("../models/Category")
 
+
+
 class Products {
     async getProduct(req, res) {
       try {
         const product = await Product.findById(req.params.id)
         return res.json(product)
+      } catch( e ) {
+        return res.status(404).json('product not found')
+      }
+    }
+
+    async uploadProductImage(req, res) {
+
+      if (!req.file) return res.status(400).json({ message: 'Ошибка загрузки' });
+
+      const imageUrl = req.file.path // Cloudinary возвращает URL загруженного файла
+
+      try {
+        const product = await Product.findById(req.body.productId)
+        if ( !product ) {
+          return res.status(404).json('product not found')
+        }
+        await Product.updateOne(product, { img: imageUrl } )
+        res.json({ imageUrl: req.file.path });
+      } catch( e ) {
+        return res.status(404).json('product not found')
+      }
+     
+    }
+
+    async deleteProductImage(req, res) {
+      try {
+        const product = await Product.findById(req.body.productId)
+        if ( !product ) {
+          return res.status(404).json('product not found')
+        }
+        await Product.updateOne(product, { img: '' } )
+        product.img = ""
+        return res.json(product);
       } catch( e ) {
         return res.status(404).json('product not found')
       }
@@ -19,9 +54,9 @@ class Products {
           return res.status(404).json('product not found')
         }
 
-        const { category, description, name, price, slug } = req.body
+        const { category, description, name, price, slug, image, isNewProduct, isPopular } = req.body
         
-        await Product.updateOne(product, { category, description, name, price, slug } )
+        await Product.updateOne(product, { category, description, name, price, slug, isNewProduct, isPopular } )
 
         return res.json(product)
       } catch( e ) {

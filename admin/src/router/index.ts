@@ -1,11 +1,18 @@
+/* eslint-disable */
+
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import ProductsView from '../views/ProductsView.vue'
+import ProductView from '../views/ProductView.vue'
+import CategoriesView from '../views/CategoriesView.vue'
+import store from '../store/index';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    meta: { requiresAuth: false }
   },
   {
     path: '/about',
@@ -18,17 +25,20 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/products',
     name: 'products',
-    component: () => import(/* webpackChunkName: "about" */ '../views/ProductsView.vue')
+    component: ProductsView,
+    meta: { requiresAuth: true }
   },
   {
     path: '/products/:id',
     name: 'product',
-    component: () => import(/* webpackChunkName: "about" */ '../views/ProductView.vue')
+    component: ProductView,
+    meta: { requiresAuth: true }
   },
   {
     path: '/categories',
     name: 'categories',
-    component: () => import(/* webpackChunkName: "about" */ '../views/CategoriesView.vue')
+    component: CategoriesView,
+    meta: { requiresAuth: true }
   }
 ]
 
@@ -36,5 +46,12 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+
+
+
+
+
+
 
 export default router
