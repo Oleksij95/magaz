@@ -3,7 +3,7 @@
         <div class="panel-header">
             <div class="panel-title">Products </div>
             <div class="serch-wrapper">
-                <form action="" @submit.prevent="fetchProducts">
+                <form action="" @submit.prevent="searchProducts">
                     <input type="text" name="term" placeholder="Search..." v-model="term">
                     <svg v-if="term" @click="clearSearch" width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                         <path d="M24,48A24,24,0,1,1,48,24,24,24,0,0,1,24,48ZM24,1A23,23,0,1,0,47,24,23,23,0,0,0,24,1Z" stroke="red" />
@@ -18,7 +18,7 @@
             <button class="accent-btn" @click="isShowNewProductPannel = true">Add Product</button>
         </div>
         <div class="panel-body-wrapper">
-            <div class="panel-nav grid-6">
+            <div class="panel-nav grid-6 gap">
                 <div>#</div>
                 <div>Image</div>
                 <div>Product</div>
@@ -27,7 +27,7 @@
                 <div>Actions</div>
             </div>
             <div class="panel-body ">
-                <router-link :to="`products/${product._id}`" v-for="(product, idx) in products" :key="product._id" class="panel-item grid-6">
+                <router-link :to="`products/${product._id}`" v-for="(product, idx) in products" :key="product._id" class="panel-item grid-6 gap">
                     <div>{{ idx + 1 }}</div>
                     <div>
                         <img :src="product.img" width="60" v-if="product.img" />
@@ -142,7 +142,7 @@ export default defineComponent({
             isShowNewProductPannel: false,
             categories: [] as Category[],
             term: "",
-            page: 1,
+            page: 1 as number,
             totalPages: 0,
             product: {
                 seoTitle: '',
@@ -158,11 +158,15 @@ export default defineComponent({
         }
     },
     async beforeMount() {
-       this.fetchProducts()
+        const page = this.$route?.query?.page
+        if (typeof page === 'string') {
+            this.page = parseInt(page)
+        }
+       this.fetchProducts(this.page)
        this.fetchCategories()
     },
     methods: {
-        async fetchProducts(page = 1) {
+        async fetchProducts(page: number) {
             try {
                 const products = await this.$axios.get(`/products?limit=10&name=${this.term}&page=${page}`)
                 this.products = products.data.products
@@ -172,28 +176,32 @@ export default defineComponent({
                 console.log(e)           
             }
         },
+        searchProducts() {
+            this.page = 1
+            this.fetchProducts(this.page)
+        },
 
         async clearSearch() {
             this.term = ""
-            this.fetchProducts()
+            this.fetchProducts(this.page)
         },
 
         setNextPage() {
-            this.fetchProducts(this.page + 1)
-            this.$router.push({ query: { page: this.page + 1 }})
+            this.page = this.page + 1
+            this.fetchProducts(this.page)
+            this.$router.push({ query: { page: this.page }})
         },
 
         setPrevPage() {
-            let page = this.page = this.page - 1
-            page > 1 ? this.fetchProducts(page - 1) :  this.fetchProducts(1)
+            this.page = this.page - 1
+            this.page > 1 ? this.fetchProducts(this.page) :  this.fetchProducts(1)
             this.$router.push({ query: { page: this.page }})
         },
 
         async deleteProduct(id: string) {
-          
             try {
                 await this.$axios.delete('/products',  {data: {id}}).then(() => {
-                    this.fetchProducts()
+                    this.fetchProducts(this.page)
                 })
             } catch( e ) {
                 console.log(e)
@@ -214,7 +222,7 @@ export default defineComponent({
             }
             try {
                 await this.$axios.post('/products', data).then(() => {
-                    this.fetchProducts()
+                    this.fetchProducts(this.page)
                     this.isShowNewProductPannel = false
                     this.product.seoTitle = ''
                     this.product.seoDescription = ''
