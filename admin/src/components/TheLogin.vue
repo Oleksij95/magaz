@@ -15,12 +15,14 @@
 import { defineComponent } from 'vue';
 import type {AxiosInstance} from 'axios'
 import { mapActions } from 'vuex'
+import { Router } from 'vue-router'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance
     // eslint-disable-next-line
     $cookies: any
+    $router: Router
   }
 }
 
@@ -40,8 +42,9 @@ export default defineComponent({
                 password: this.pass
             })  
             if (login.status > 200) {
-                login.response?.data?.error ? this.error = login?.response?.data?.error : this.error = login.message
+              return  login.response?.data?.error ? this.error = login?.response?.data?.error : this.error = login.message
             }
+            this.$router.push({ name: 'statistics' })
         },
         ...mapActions(['login'])
     },

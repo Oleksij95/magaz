@@ -1,7 +1,20 @@
 <template>
     <div class="panel">
         <div class="panel-header">
-            <div class="panel-title">Products ({{ products.length }})</div>
+            <div class="panel-title">Products </div>
+            <div class="serch-wrapper">
+                <form action="" @submit.prevent="fetchProducts">
+                    <input type="text" name="term" placeholder="Search..." v-model="term">
+                    <svg v-if="term" @click="clearSearch" width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24,48A24,24,0,1,1,48,24,24,24,0,0,1,24,48ZM24,1A23,23,0,1,0,47,24,23,23,0,0,0,24,1Z" stroke="red" />
+                        <path d="M18.7,29.8A0.5,0.5,0,0,1,18.34,29L29,18.34a0.5,0.5,0,0,1,.71.71L19.05,29.66A0.5,0.5,0,0,1,18.7,29.8Z" stroke="red" />
+                        <path d="M29.3,29.8A0.5,0.5,0,0,1,29,29.66L18.34,19A0.5,0.5,0,0,1,19,18.34L29.66,29A0.5,0.5,0,0,1,29.3,29.8Z" stroke="red" />
+                        <rect width="48" height="48" fill="none"/>
+                    </svg>
+                    <button type="submit" class="submit">Search</button>
+                </form>
+                
+            </div>
             <button class="accent-btn" @click="isShowNewProductPannel = true">Add Product</button>
         </div>
         <div class="panel-body-wrapper">
@@ -21,7 +34,7 @@
                         <img src="../assets/default.jpg" width="60" v-else />
                     </div>
                     <div>{{ product.name }}</div>
-                    <div>{{ product.category.name }}</div>
+                    <div>{{ product?.category?.name }}</div>
                     <div>{{ product.price }}</div>
                     <div @click.prevent.stop="deleteProduct(product._id)" class="deleteProduct" title="delete"></div>
                 </router-link>
@@ -101,7 +114,7 @@ interface NewProduct {
     seoDescription?: string
     name: string
     slug: string
-    price: number
+    price: number | string
     description?: string
     category: Category
     isPopular?: boolean
@@ -122,6 +135,7 @@ export default defineComponent({
             products: [] as NewProduct[],
             isShowNewProductPannel: false,
             categories: [] as Category[],
+            term: "",
             product: {
                 seoTitle: '',
                 seoDescription: '',
@@ -142,12 +156,18 @@ export default defineComponent({
     methods: {
         async fetchProducts() {
             try {
-                const products = await this.$axios.get('/products')
+                const products = await this.$axios.get(`/products?limit=10&name=${this.term}`)
                 this.products = products.data
             } catch( e ) {
                 console.log(e)           
             }
         },
+
+        async clearSearch() {
+            this.term = ""
+            this.fetchProducts()
+        },
+
         async deleteProduct(id: string) {
           
             try {

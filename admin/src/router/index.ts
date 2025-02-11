@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import ProductsView from '../views/ProductsView.vue'
 import ProductView from '../views/ProductView.vue'
 import CategoriesView from '../views/CategoriesView.vue'
+import StatisticsView from '../views/StatisticsView.vue'
 import store from '../store/index';
 
 const routes: Array<RouteRecordRaw> = [
@@ -11,14 +12,6 @@ const routes: Array<RouteRecordRaw> = [
     name: 'home',
     component: HomeView,
     meta: { requiresAuth: false }
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
     path: '/products',
@@ -37,6 +30,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'categories',
     component: CategoriesView,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/statistics',
+    name: 'statistics',
+    component: StatisticsView,
+    meta: { requiresAuth: true }
   }
 ]
 
@@ -54,7 +53,7 @@ router.beforeEach((to, from, next)=>{
     }
     
     if (currentUser && to.path === '/') {
-      next({name:'products'})
+      next({name:'statistics'})
     }
 
     next();

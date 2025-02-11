@@ -65,8 +65,13 @@ class Products {
     }
     async getProducts(req, res) {
       try {
-        const products = await Product.find().sort({date_create:'desc'})
+        let name = ""
+        req.query.name.trim().length > 0 ? name = req.query.name : name = ""
+
+
+        const products = await Product.find({'name': { $regex: name }}).sort({date_create:'desc'}).limit(10)
         const productsDto = []
+        
         for (let product of products) {
             const category = await Category.findById(product.category)
             let productDto = {}

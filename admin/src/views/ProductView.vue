@@ -45,7 +45,7 @@
                 <div class="row">
                     <div class="field">
                         <label for="price">Price</label>
-                        <input type="number" name="price" v-model="product.price" id="price" >
+                        <input type="text" name="price" v-model="product.price" id="price" >
                     </div>
                     <div class="field">
                         <label for="category">Category</label>
@@ -79,7 +79,7 @@ interface Product {
     seoDescription?: string
     name: string
     slug: string
-    price: number
+    price: number | string
     description?: string
     category?: string
     isPopular?: boolean
@@ -93,7 +93,7 @@ interface Category {
 }
 
 export default defineComponent({
-    name: 'ProductWciew',
+    name: 'ProductView',
     mixins: [fetchCategories],
     data() {
         return {

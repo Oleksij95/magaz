@@ -10,6 +10,7 @@
   "author": "Anisimov",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.41.3",
     "cookie": "^1.0.2",
