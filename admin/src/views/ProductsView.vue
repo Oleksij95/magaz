@@ -40,6 +40,12 @@
                 </router-link>
             </div>
         </div>
+
+        <div class="pagination">
+            <div @click="setPrevPage">prev</div>
+            {{ page }} of {{ totalPages }} 
+            <div @click="setNextPage">next</div>
+        </div>
     </div>
 
     <div v-if="isShowNewProductPannel" class="new-product">
@@ -136,6 +142,8 @@ export default defineComponent({
             isShowNewProductPannel: false,
             categories: [] as Category[],
             term: "",
+            page: 1,
+            totalPages: 0,
             product: {
                 seoTitle: '',
                 seoDescription: '',
@@ -154,10 +162,12 @@ export default defineComponent({
        this.fetchCategories()
     },
     methods: {
-        async fetchProducts() {
+        async fetchProducts(page = 1) {
             try {
-                const products = await this.$axios.get(`/products?limit=10&name=${this.term}`)
-                this.products = products.data
+                const products = await this.$axios.get(`/products?limit=10&name=${this.term}&page=${page}`)
+                this.products = products.data.products
+                this.page = products.data.page
+                this.totalPages = products.data.totalPages
             } catch( e ) {
                 console.log(e)           
             }
@@ -166,6 +176,17 @@ export default defineComponent({
         async clearSearch() {
             this.term = ""
             this.fetchProducts()
+        },
+
+        setNextPage() {
+            this.fetchProducts(this.page + 1)
+            this.$router.push({ query: { page: this.page + 1 }})
+        },
+
+        setPrevPage() {
+            let page = this.page = this.page - 1
+            page > 1 ? this.fetchProducts(page - 1) :  this.fetchProducts(1)
+            this.$router.push({ query: { page: this.page }})
         },
 
         async deleteProduct(id: string) {

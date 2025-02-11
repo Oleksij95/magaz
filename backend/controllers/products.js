@@ -65,11 +65,11 @@ class Products {
     }
     async getProducts(req, res) {
       try {
-        let name = ""
-        req.query.name.trim().length > 0 ? name = req.query.name : name = ""
-
-
-        const products = await Product.find({'name': { $regex: name }}).sort({date_create:'desc'}).limit(10)
+        const name = req.query.name.trim() || ""
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10
+        const products = await Product.find({'name': { $regex: name }}).sort({date_create:'desc'}).skip( (page - 1) * limit ).limit(limit)
+        const total = await Product.countDocuments({'name': { $regex: name }})
         const productsDto = []
         
         for (let product of products) {
@@ -87,8 +87,15 @@ class Products {
             productDto.category = category
             productsDto.push(productDto)
         }
-
-        return res.json(productsDto)
+       
+        return res.json(
+          {
+            total,
+            page,   
+            totalPages: Math.ceil(total / limit),
+            products: productsDto   
+          }
+        )
       } catch( e ) {
         console.log(e)
       }
